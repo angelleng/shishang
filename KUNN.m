@@ -1,3 +1,13 @@
+x = [1,0,0,0,0,1,1,0,1,0;
+    0,1,1,1,0,1,0,0,1,0;
+    1,0,0,1,0,0,1,0,0,1;
+    0,0,0,1,1,1,0,0,1,1;
+    1,0,1,0,1,0,1,0,1,0;
+    0,1,0,1,0,1,0,1,0,1;
+    1,1,1,0,1,0,0,0,0,1;
+    0,1,1,0,0,1,1,0,0,1;
+    1,0,0,1,0,0,1,1,1,0;
+    1,1,1,0,0,1,0,1,0,1];
 [m,n] = size(x);
 sim_users = zeros(m,m);
 sim_items = zeros(n,n);
@@ -31,6 +41,7 @@ for i = 1:n
 end
 [index_row,index_column] = find(~x);
 for s = 1:length(index_row)
+    su = 0; si = 0;
     for t = 1:5
         index_v = KNN_users(index_row(s,1),t);
         temp_j = 0;
@@ -44,6 +55,6 @@ for s = 1:length(index_row)
             temp_v = temp_v+x(v,index_column(s,1))*x(v,index_j)/sqrt(sum_row(v,1));
         end
         si = si+x(index_row(s,1),index_j)*temp_v/sqrt(sum_column(1,index_j));
-        x(index_row(s,1),index_column(s,1)) = (su+si)/sqrt(sum_row(index_row(s,1),1)*sum_column(1,index_column(s,1)));
     end
+    x(index_row(s,1),index_column(s,1)) = (su+si)/sqrt(sum_row(index_row(s,1),1)*sum_column(1,index_column(s,1)));
 end
