@@ -46,13 +46,17 @@ for s = 1:length(index_row)
         index_v = KNN_users(index_row(s,1),t);
         temp_j = 0;
         for j = 1:n
-            temp_j = temp_j+x(index_row(s,1),j)*x(index_v,j)/sqrt(sum_column(1,j));
+            if x(index_row(s,1),j) == 1 && x(index_v,j) ==1
+                temp_j = temp_j+1/sqrt(sum_column(1,j));
+            end
         end
         su = su+x(index_v,index_column(s,1))*temp_j/sqrt(sum_row(index_v,1));
         index_j = KNN_items(index_column(s,1),t);
         temp_v = 0;
         for v = 1:m
-            temp_v = temp_v+x(v,index_column(s,1))*x(v,index_j)/sqrt(sum_row(v,1));
+            if x(v,index_column(s,1)) == 1 && x(v,index_j) == 1
+                temp_v = temp_v+1/sqrt(sum_row(v,1));
+            end
         end
         si = si+x(index_row(s,1),index_j)*temp_v/sqrt(sum_column(1,index_j));
     end
