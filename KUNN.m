@@ -1,13 +1,14 @@
 x = [1,0,0,0,0,1,1,0,1,0;
     0,1,1,1,0,1,0,0,1,0;
-    1,0,0,1,0,0,1,0,0,1;
-    0,0,0,1,1,1,0,0,1,1;
+    1,0,0,1,0,0,1,0,0,0;
+    0,0,0,1,1,1,0,0,1,0;
     1,0,1,0,1,0,1,0,1,0;
-    0,1,0,1,0,1,0,1,0,1;
-    1,1,1,0,1,0,0,0,0,1;
-    0,1,1,0,0,1,1,0,0,1;
+    0,1,0,1,0,1,0,1,0,0;
+    1,1,1,0,1,0,0,0,0,0;
+    0,1,1,0,0,1,1,0,0,0;
     1,0,0,1,0,0,1,1,1,0;
-    1,1,1,0,0,1,0,1,0,1];
+    1,1,1,0,0,1,0,1,0,0];
+% x = M; 
 k = 5;
 [m,n] = size(x);
 sim_users = zeros(m,m);
@@ -16,18 +17,14 @@ sum_column = sum(x);
 sum_row = sum(x,2);
 for u = 1:m-1
     for v = u+1:m
-        for i = 1:n
-            sim_users(u,v) = sim_users(u,v)+x(u,i)*x(v,i)/sqrt(sum_row(u,1)*sum_row(v,1)*sum_column(1,i));
-            sim_users(v,u) = sim_users(u,v);
-        end
+        sim_users(u, v) = x(u,:) * x(v,:)'/sqrt(sum(x(u,:)) * sum(x(v,:))); 
+        sim_users(v, u) = sim_users(u, v); 
     end
 end
 for i = 1:n-1
     for j = i+1:n
-        for u = 1:m
-            sim_items(i,j) = sim_items(i,j)+x(u,i)*x(u,j)/sqrt(sum_column(1,i)*sum_column(1,j)*sum_row(u,1));
-            sim_items(j,i) = sim_items(i,j);
-        end
+        sim_items(i, j) = x(:,i)' * x(:,j)/sqrt(sum(x(:,i)) * sum(x(:,j)));
+        sim_items(j, i) = sim_items(i, j); 
     end
 end
 KNN_users = zeros(m,k);
