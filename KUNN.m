@@ -17,13 +17,13 @@ sum_column = sum(x);
 sum_row = sum(x,2);
 for u = 1:m-1
     for v = u+1:m
-        sim_users(u, v) = x(u,:) * x(v,:)'/sqrt(sum(x(u,:)) * sum(x(v,:))); 
+        sim_users(u, v) = (x(u,:) ./ sqrt(sum_column)) * x(v,:)'/sqrt(sum(x(u,:)) * sum(x(v,:))); 
         sim_users(v, u) = sim_users(u, v); 
     end
 end
 for i = 1:n-1
     for j = i+1:n
-        sim_items(i, j) = x(:,i)' * x(:,j)/sqrt(sum(x(:,i)) * sum(x(:,j)));
+        sim_items(i, j) = (x(:,i) ./ sqrt(sum_row))' * x(:,j)/sqrt(sum(x(:,i)) * sum(x(:,j)));
         sim_items(j, i) = sim_items(i, j); 
     end
 end
