@@ -1,9 +1,9 @@
-fileID = fopen('u1.base');
+fileID = fopen('u1.base'); 
 C = textscan(fileID, '%d %d %d %d'); 
-fclose(fileID);
+fclose(fileID); 
 user = C{1}; 
 item = C{2}; 
-rating = C{3};
+rating = C{3}; 
 
 n = size(unique(user), 1); 
 
@@ -13,3 +13,9 @@ M = zeros(n, m);
 
 ind = sub2ind([n, m], user, item); 
 M(ind) = rating > 3; 
+
+
+tmp = sum(M, 2); 
+tmp2 = sum(M, 1); 
+M = M(tmp > 0, tmp2 > 0); 
+
