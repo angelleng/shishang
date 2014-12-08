@@ -1,18 +1,15 @@
-% x = [1,0,0,0,0,1,1,0,1;
-%     0,1,1,1,0,1,0,0,1;
-%     1,0,0,1,0,0,1,0,0;
-%     0,0,0,1,1,1,0,0,1;
-%     1,0,1,0,1,0,1,0,1;
-%     0,1,0,1,0,1,0,1,0;
-%     1,1,1,0,1,0,0,0,0;
-%     0,1,1,0,0,1,1,0,0;
-%     1,0,0,1,0,0,1,1,1;
-%     1,1,1,0,0,1,0,1,0];
-load('data.mat');
-tmp = sum(M, 2); 
-tmp2 = sum(M); 
-M = M(tmp > 0, tmp2 > 0); 
-test_file = fopen('u2.test');
+% x = [1,0,0,0,0,1,1,0,1,0;
+%     0,1,1,1,0,1,0,0,1,0;
+%     1,0,0,1,0,0,1,0,0,0;
+%     0,0,0,1,1,1,0,0,1,0;
+%     1,0,1,0,1,0,1,0,1,0;
+%     0,1,0,1,0,1,0,1,0,0;
+%     1,1,1,0,1,0,0,0,0,0;
+%     0,1,1,0,0,1,1,0,0,0;
+%     1,0,0,1,0,0,1,1,1,0;
+%     1,1,1,0,0,1,0,1,0,0];
+load('data.mat'); 
+test_file = fopen('u1.test');
 C = textscan(test_file,'%d %d %d %d');
 fclose(test_file);
 x = M;
@@ -26,14 +23,22 @@ sum_row = sum(x,2);
 
 for u = 1:m-1
     for v = u+1:m
-        sim_users(u,v) = (x(u,:)./sqrt(sum_column))*x(v,:)'/sqrt(sum(x(u,:))*sum(x(v,:))); 
-        sim_users(v,u) = sim_users(u,v); 
+        for i = 1:n
+            if sum_row(u,1) > 0 && sum_row(v,1) > 0 && sum_column(1,i)
+                sim_users(u,v) = sim_users(u,v)+x(u,i)*x(v,i)/sqrt(sum_row(u,1)*sum_row(v,1)*sum_column(1,i)); 
+                sim_users(v,u) = sim_users(u,v);
+            end
+        end
     end
 end
 for i = 1:n-1
     for j = i+1:n
-        sim_items(i,j) = (x(:,i)./sqrt(sum_row))'*x(:,j)/sqrt(sum(x(:,i))*sum(x(:,j)));
-        sim_items(j,i) = sim_items(i,j); 
+        for u = 1:m
+            if sum_column(1,i) > 0 && sum_column(1,j) > 0 && sum_row(u,1) > 0
+                sim_items(i,j) = sim_items(i,j)+x(u,i)*x(u,j)/sqrt(sum_column(1,i)*sum_column(1,j)*sum_row(u,1));
+                sim_items(j,i) = sim_items(i,j); 
+            end
+        end
     end
 end
 
@@ -71,6 +76,8 @@ for iter = 1:20000
         si = si+x(u,index_j)*temp_v/sqrt(sum_column(1,index_j));
     end
     result(iter,1) = u; result(iter,2) = i;
-    result(iter,3) = (su+si)/sqrt(sum_row(u,1)*sum_column(1,i));
+    if sum_row(u,1) > 0 && sum_column(1,i) > 0
+        result(iter,3) = (su+si)/sqrt(sum_row(u,1)*sum_column(1,i));
+    end
 end
 
