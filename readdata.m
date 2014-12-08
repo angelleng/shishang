@@ -15,7 +15,6 @@ ind = sub2ind([n, m], user, item);
 M(ind) = rating > 3; 
 
 
-tmp = sum(M, 2); 
-tmp2 = sum(M, 1); 
-M = M(tmp > 0, tmp2 > 0); 
-
+% tmp = sum(M, 2); 
+% tmp2 = sum(M, 1); 
+% M = M(tmp > 0, tmp2 > 0);  
