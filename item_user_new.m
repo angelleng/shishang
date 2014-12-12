@@ -9,6 +9,9 @@
 %     1,0,0,1,0,0,0,0,0;
 %     1,1,1,0,0,1,0,0,0];
 load('data.mat'); 
+
+fprintf('File loaded\n');
+
 % test_file = fopen('u1.test');
 % C = textscan(test_file,'%d %d %d %d');
 % fclose(test_file);
@@ -23,30 +26,40 @@ sum_row = sum(x,2);
 
 for u = 1:m-1
     for v = u+1:m
-        for i = 1:n
-            if sum_row(u,1) > 0 && sum_row(v,1) > 0 && sum_column(1,i) 
-                sim_users(u,v) = x(u,:) * x(v,:)' / sqrt(sum(x(u,:)) * sum(x(v,:))); 
-                sim_users(v,u) = sim_users(u,v); 
-            end
-        end
+%         for i = 1:n
+%             if sum_row(u,1) > 0 && sum_row(v,1) > 0 && sum_column(1,i) 
+                if sqrt(sum(x(u,:)) * sum(x(v,:))) > 0
+                    sim_users(u,v) = x(u,:) * x(v,:)' / sqrt(sum(x(u,:)) * sum(x(v,:))); 
+                    sim_users(v,u) = sim_users(u,v); 
+                end
+%             end
+            
+            fprintf('1\n');
+%         end
     end
 end
 for i = 1:n-1
     for j = i+1:n
-        for u = 1:m
-            if sum_column(1,i) > 0 && sum_column(1,j) > 0 && sum_row(u,1) > 0
-                sim_items(i,j) = x(:,i)' * x(:,j) / sqrt(sum(x(:,i)) * sum(x(:,j)));
-                sim_items(j,i) = sim_items(i,j);
-            end
-        end
+%         for u = 1:m
+%             if sum_column(1,i) > 0 && sum_column(1,j) > 0 && sum_row(u,1) > 0
+                if sqrt(sum(x(:,i)) * sum(x(:,j))) > 0
+                    sim_items(i,j) = x(:,i)' * x(:,j) / sqrt(sum(x(:,i)) * sum(x(:,j)));
+                    sim_items(j,i) = sim_items(i,j);
+                end
+            fprintf('2\n');
+%         end
     end
 end
+
+fprintf('Similarity calculated\n');
 
 KNN_users = zeros(m,k);
 
 for u = 1:m
     [~,sortIndex_users] = sort(sim_users(u,:),'descend');
-    KNN_users(u,:) = sortIndex_users(1:k);    
+    KNN_users(u,:) = sortIndex_users(1:k);  
+    
+    fprintf('3\n');
 end
 
 KNN_items = zeros(n,k);
@@ -54,7 +67,10 @@ KNN_items = zeros(n,k);
 for i = 1:n
     [~,sortIndex_items] = sort(sim_items(i,:),'descend');
     KNN_items(i,:) = sortIndex_items(1:k);    
+    fprintf('4\n');
 end
+
+fprintf('KNN calculated\n');
 
 item_result = zeros(m,n);
 user_result = zeros(m,n);
@@ -75,6 +91,8 @@ for u = 1:m
             if sum_column(1,i) > 0
                 si = si + x(v,i) * temp_j / sqrt(sum_column(1,i));
             end
+            
+            fprintf('%d %d %d\n', u, i, v);
         end
         item_result(u,i) = si;
 
@@ -82,7 +100,9 @@ for u = 1:m
         temp_s = x(:,i);
         index = KNN_users(u,:);
         t = temp_s(index',:);
-        su = 9 / 5 * sum(t);
+        su = length(sum_column) / 5 * sum(t);
         user_result(u,i) = su;
+        
+        fprintf('One pair added\n');
     end 
 end
