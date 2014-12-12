@@ -1,11 +1,6 @@
 %%%%%% 545 Final %%%%%% 
 
-%% Baseline: Pop 
-M = M_before; 
-[a, b] = sort(sum(M), 'descend'); 
-popularity = sum(M); 
-pop = T; 
-pop(:, 3) = popularity(pop(:,2)); 
+
 
 %% Evaluating performances 
 fileID = fopen('u1.test'); 
@@ -16,6 +11,14 @@ item = C{2};
 rating = C{3}; 
 
 T = [user, item, rating > 3]; 
+
+%% Baseline: Pop 
+M = M_before; 
+[a, b] = sort(sum(M), 'descend'); 
+popularity = sum(M); 
+pop = T; 
+pop(:, 3) = popularity(pop(:,2)); 
+
 
 fileID = fopen('wALS_output.txt'); 
 C = textscan(fileID, '%d %d %f %d'); 
@@ -35,34 +38,35 @@ random = T;
 random(:, 3) = randperm(20000); 
 load KUNN_output 
 
-scores1 = []; 
-for i = 1:10 
+scores_WALS = []; 
+for i = 1:50 
 [a, b, c] = evaluate_user_selected(T, Pnew); 
-scores1 = [scores1; a, b, c]; 
+scores_WALS = [scores_WALS; a, b, c]; 
 end 
 
-scores2 = []; 
-for i = 1:10 
+scores_random = []; 
+for i = 1:50 
 [a, b, c] = evaluate_user_selected(T, random);
-scores2 = [scores2; a, b, c]; 
+scores_random = [scores_random; a, b, c]; 
 end 
 
-scores3 = []; 
-for i = 1:10 
+scores_KUNN = []; 
+for i = 1:50 
 [a, b, c] = evaluate_user_selected(T, result);
-scores3 = [scores3; a, b, c]; 
+scores_KUNN = [scores_KUNN; a, b, c]; 
 end 
 
-scores4 = [];
-for i = 1:10 
+scores_POP = [];
+for i = 1:50 
 [a, b, c] = evaluate_user_selected(T, pop);
-scores4 = [scores4; a, b, c]; 
+scores_POP = [scores_POP; a, b, c]; 
 end 
 
-mean(scores1) 
-mean(scores2)
-mean(scores3) 
-mean(scores4)
+mean(scores_random)
+var(scores_random)
+mean(scores_WALS) 
+mean(scores_KUNN) 
+mean(scores_POP)
 
 
 
