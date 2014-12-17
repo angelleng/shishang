@@ -62,13 +62,25 @@ for i = 1:50
 scores_POP = [scores_POP; a, b, c]; 
 end 
 
+
+scores_item = [];
+for i = 1:50 
+[a, b, c] = evaluate_user_selected(T, item_result);
+scores_item = [scores_item; a, b, c]; 
+end 
+
+scores_user = [];
+for i = 1:50 
+[a, b, c] = evaluate_user_selected(T, user_result);
+scores_user = [scores_user; a, b, c]; 
+end 
+
 mean(scores_random)
-var(scores_random)
 mean(scores_WALS) 
 mean(scores_KUNN) 
 mean(scores_POP)
-
-
+mean(scores_item) 
+mean(scores_user)
 
 
 
