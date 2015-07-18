@@ -1,7 +1,7 @@
 shishang
 ========
 
-Final Project for EECS 545 F14 at University of Michigan
+Final Project for EECS 545 F14 at University of Michigan. Keywords: machine learning, recommendation system, collaborative filtering. 
 
 Our group implemented a variant of collaborative filtering algorithm proposed in *Unifying Nearest Neighbors Collaborative Filtering*, Verstrepen et. al and applied it on Yahoo! movie rating data. 
 
