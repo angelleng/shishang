@@ -1,4 +1,4 @@
-shishang
+KUNN
 ========
 
 This is the repository for our group's Final Project for EECS 545 F14 at University of Michigan. Keywords: machine learning, recommendation system, collaborative filtering. 
